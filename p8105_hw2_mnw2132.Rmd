@@ -5,40 +5,32 @@ date: "2024-09-30"
 output: github_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
 ## Problem 1
-*Bring data in and begin cleaning*
+
+*Bring data in*
 ```{r}
 library(tidyverse)
-transit_data = read_csv(file = "/Users/nickywilliams/Desktop/hw2/NYC_Transit_Subway_Entrance_And_Exit_Data.csv")%>%
+transit_data = read_csv(file = "/Users/nickywilliams/Desktop/hw2/NYC_Transit_Subway_Entrance_And_Exit_Data.csv", na=c(".","NA","")) %>%
   janitor::clean_names()
-  na=c(".","NA","")
 ```
-
-*read data* 
+*Read and clean data *
 ```{r}
 transit_data
-names(transit_data)
+select(transit_data, line, station_location, station_name, station_latitude,  station_longitude, starts_with("route"), entry, vending, entrance_type, ada) %>%
+
+mutate(
+  entry = case_match(
+    entry,
+    "YES" ~ 1,
+    "NO" ~ 0))
 ```
 
-*clean data*
+*Paragraph about the data* 
+
+After cleaning the data, it contains 20 variables, including transit_data, line, station_location, station_name, station_latitude,  station_longitude, entry, vending, entrance_type, ada, and all 11 variables starting with route. We cleaned the data by making all missing data represented by "na", putting all names into snake format, selecting the 20 variables to keep within the data, and by changing the entry variable to a logical variable where 1=yes and 0=no. There 1,868 rows and 20 columns in the resulting data set. Considering that the columns are variables, the rows are observations and every value has a cell, this data is tidy. 
 
 
-```{r cars}
-summary(cars)
-```
 
 ## Problem 2
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
 
 ## Problem 3
