@@ -1,0 +1,44 @@
+---
+title: "p8105_hw2_mnw2132"
+author: "Mary Williams"
+date: "2024-09-30"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Problem 1
+*Bring data in and begin cleaning*
+```{r}
+library(tidyverse)
+transit_data = read_csv(file = "/Users/nickywilliams/Desktop/hw2/NYC_Transit_Subway_Entrance_And_Exit_Data.csv")%>%
+  janitor::clean_names()
+  na=c(".","NA","")
+```
+
+*read data* 
+```{r}
+transit_data
+names(transit_data)
+```
+
+*clean data*
+
+
+```{r cars}
+summary(cars)
+```
+
+## Problem 2
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+## Problem 3
