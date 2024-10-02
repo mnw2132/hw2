@@ -117,12 +117,8 @@ results = read_csv(file = "/Users/nickywilliams/Desktop/hw2/gbb_datasets/results
   janitor::clean_names()
   na.omit(results)
 ```
-```{r}
-#check column names
-colnames(bakers)
-colnames(bakes)
-colnames(results)
 
+```{r}
 #Make sure the columns names are both baker
 colnames(bakers)[colnames(bakers) == "baker_name"] = "baker"
 
@@ -136,28 +132,36 @@ nrow(results)
 
 #check how many results are not in baker 
 anti_tidy_trash = anti_join(results, bakers, by = c("baker"))
-
 all_tidy_trash = anti_join(anti_tidy_trash, bakes, by = c("baker"))
-
-#Export as csv
-write_csv(all_tidy_trash, "all_tidy_trash.csv")
-
-colnames(all_tidy_trash)
 ```
 
-During the data cleaning process, I imported each data set, cleaned each set with "janitor::clean_names()" take format the titles as snake format, and did "na.omit(...)" to remove any missing data. For results I also did "skip=2" to remove the 1st too rows of notes, which made the column titles the same as the other files. For bakers, I also had to change the column name "baker_name" to "baker" so that when they are joined, the column "baker" is same within all of the datasets. Considering that I could not join 3 datasets all together directly, I joined results and bakers, and then combined bakes into the combined file. 
-
-The final data set includes `r nrow(all_tidy_trash)` rows and `r ncol(all_tidy_trash)` columns and has each person's information lined up according to each season and episode they were in. 
+```{r}
+# combine them 
+combined_data = 
+  full_join(results, bakes, by = c("baker", "episode", "series")) %>%
+  full_join(x = ., bakers, by = c("baker", "series")) %>%
+  select(baker, series, baker_age, baker_occupation, hometown, episode, signature_bake, show_stopper, technical, result)
+```
 
 ```{r}
-table_all_trash = all_tidy_trash %>%
+#Export as csv
+write_csv(combined_data, "combined_data.csv")
+```
+
+During the data cleaning process, I imported each data set, cleaned each set with "janitor::clean_names()" take format the titles as snake format, and did "na.omit(...)" to remove any missing data. For results I also did "skip=2" to remove the 1st too rows of notes, which made the column titles the same as the other files. For bakers, I also had to change the column name "baker_name" to "baker" so that when they are joined, the column "baker" is same within all of the datasets. Anti-join shows the discrepencies between the data sets. Considering that I could not join 3 datasets all together directly, I joined results and bakers, and then combined bakes into the combined file. 
+
+The final data set includes `r nrow(combined_data)` rows and `r ncol(combined_data)` columns and has each person's information lined up according to each season and episode they were in. 
+
+```{r}
+table_all = combined_data %>%
   filter(series >= 5 & series <= 10) %>%
   filter(result %in% c( "WINNER", "STAR BAKER")) %>%
+  select(series, episode, baker, result) %>%
  distinct()
 ```
 
 ```{r}
-print(table_all_trash)
+print(table_all)
 ```
 
 ```{r}
