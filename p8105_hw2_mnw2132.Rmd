@@ -12,10 +12,19 @@ output: github_document
 library(tidyverse)
 transit_data = read_csv(file = "/Users/nickywilliams/Desktop/hw2/NYC_Transit_Subway_Entrance_And_Exit_Data.csv", na=c(".","NA","")) %>%
   janitor::clean_names()
+transit_data
+select(transit_data, line, station_location, station_name, station_latitude,  station_longitude, starts_with("route"), entry, vending, entrance_type, ada) %>%
+
+mutate(
+  entry = case_match(
+    entry,
+    "YES" ~ 1,
+    "NO" ~ 0))
 ```
 *Read and clean data *
 ```{r}
 transit_data
+transit_data_clean=
 select(transit_data, line, station_location, station_name, station_latitude,  station_longitude, starts_with("route"), entry, vending, entrance_type, ada) %>%
 
 mutate(
@@ -29,8 +38,47 @@ mutate(
 
 After cleaning the data, it contains 20 variables, including transit_data, line, station_location, station_name, station_latitude,  station_longitude, entry, vending, entrance_type, ada, and all 11 variables starting with route. We cleaned the data by making all missing data represented by "na", putting all names into snake format, selecting the 20 variables to keep within the data, and by changing the entry variable to a logical variable where 1=yes and 0=no. There 1,868 rows and 20 columns in the resulting data set. Considering that the columns are variables, the rows are observations and every value has a cell, this data is tidy. 
 
+*How many stations*
+```{r}
+number_stations=
+  distinct(transit_data_clean, station_name, line)
+number_stations
+nrow(number_stations)
+```
+Therefore, there are 465 stations in nyc. 
 
+*How many stations are ADA compliant*
+```{r}
+ADA_stations <- transit_data_clean |>
+    filter(ada=="TRUE") |>
+    distinct(station_name, line) |>
+nrow()
+
+ADA_stations
+```
+There are 84 ADA compliant stations. 
+
+*What proportion of entrances/exits w/out vending allow entrance*
+```{r}
+no_vending_entry <- transit_data %>%
+  filter(vending == "NO") %>%
+  summarise(proportion = mean(entry == "YES"))
+
+no_vending_entry
+
+```
+The proportion is 37.7%. 
+
+## NEED TO FINISH THIS PROBLEM
 
 ## Problem 2
-
+```{r}
+library(readxl)
+library(dplyr)
+Mr_trash_wheel = read_excel("/Users/nickywilliams/Desktop/hw2/202409 Trash Wheel Collection Data.xlsx", sheet = "Mr. Trash Wheel") %>%
+  janitor::clean_names()
+select(Mr_trash_wheel, -month, -year, -date) %>%
+  mutate(sports_balls = as.integer(round(sports_balls)))
+```
+Mr_trash_wheel
 ## Problem 3
