@@ -148,8 +148,21 @@ all_tidy_trash = anti_join(anti_tidy_trash, bakes, by = "baker")
 
 #Export as csv
 write_csv(all_tidy_trash, "all_tidy_trash.csv")
+
+colnames(all_tidy_trash)
 ```
 
-During the data cleaning process, I imported each data set, cleaned each set with "janitor::clean_names()" take format the titles as snake format, and did "na.omit(...)" to remove any missing data. For results I also did skip=2 to remove the 1st too rows of notes, which made the column titles the same as the other files. For bakers, I also had to change the column name "baker_name" to "baker" so that when they are joined, the column "baker" is same within all of the datasets. Considering that I could not join 3 datasets all together directly, I joined results and bakers, and then combined bakes into the combined file. 
+During the data cleaning process, I imported each data set, cleaned each set with "janitor::clean_names()" take format the titles as snake format, and did "na.omit(...)" to remove any missing data. For results I also did "skip=2" to remove the 1st too rows of notes, which made the column titles the same as the other files. For bakers, I also had to change the column name "baker_name" to "baker" so that when they are joined, the column "baker" is same within all of the datasets. Considering that I could not join 3 datasets all together directly, I joined results and bakers, and then combined bakes into the combined file. 
 
 The final data set includes `r nrow(all_tidy_trash)` and `r ncol(all_tidy_trash)` and has each person's information lined up according to each season and episode they were in. 
+
+```{r}
+table_all_trash = all_tidy_trash %>%
+  filter(series >= 5 & series <= 10) %>%
+  filter(result %in% c( "WINNER", "STAR BAKER")) %>%
+ distinct()
+```
+
+```{r}
+print(table_all_trash)
+```
