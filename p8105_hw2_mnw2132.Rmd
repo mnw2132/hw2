@@ -53,14 +53,12 @@ There are 84 ADA compliant stations.
 ```{r}
 no_vending_entry <- transit_data %>%
   filter(vending == "NO") %>%
-  summarise(proportion = mean(entry == "YES"))
+  summarize(proportion = mean(entry == "YES"))
 
 no_vending_entry
 
 ```
 The proportion is 37.7%. 
-
-## NEED TO FINISH THIS PROBLEM
 
 ## Problem 2
 ```{r}
@@ -176,12 +174,11 @@ head(viewers, 10)
 colnames(viewers)
 season_1 <- viewers %>%
   summarize(season_1 = mean(`series_1`, na.rm = TRUE))
+season_1
 
 season_5 <- viewers %>%
   summarise(season_5 = mean(`series_5`, na.rm = TRUE))
-
-print(season_1)
-print(season_5)
+season_5
 ```
 
-The average viewership in season 1 was 2.77 and for season 5 it was 10.0. 
+The average viewership in season 1 was `season_1` 2.77 and for season 5 it was 10.0. 
