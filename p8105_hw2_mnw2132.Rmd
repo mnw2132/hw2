@@ -12,18 +12,9 @@ output: github_document
 library(tidyverse)
 transit_data = read_csv(file = "/Users/nickywilliams/Desktop/hw2/NYC_Transit_Subway_Entrance_And_Exit_Data.csv", na=c(".","NA","")) %>%
   janitor::clean_names()
-transit_data
-select(transit_data, line, station_location, station_name, station_latitude,  station_longitude, starts_with("route"), entry, vending, entrance_type, ada) %>%
-
-mutate(
-  entry = case_match(
-    entry,
-    "YES" ~ 1,
-    "NO" ~ 0))
 ```
 *Read and clean data *
 ```{r}
-transit_data
 transit_data_clean=
 select(transit_data, line, station_location, station_name, station_latitude,  station_longitude, starts_with("route"), entry, vending, entrance_type, ada) %>%
 
@@ -86,7 +77,8 @@ select(-month, -year, -date) %>%
 #Professor Trash Wheel
 Professor_Trash_Wheel = read_excel("/Users/nickywilliams/Desktop/hw2/202409 Trash Wheel Collection Data.xlsx", sheet = "Professor Trash Wheel") %>%
   janitor::clean_names() %>%
-select (-month, -year)
+select (-month, -year) %>%
+drop_na()
 ```
 
 ```{r}
@@ -98,16 +90,13 @@ select (-month, -year)
 
 ```{r}
 #Combine
-tidy_trash=
+tidy_trash =
   bind_rows(Mr_trash_wheel, Professor_Trash_Wheel, Gwynnda_Trash_Wheel)
-
-tidy_trash
 ```
-
 
 In this, there are `r nrow(tidy_trash)` by `r ncol(tidy_trash)` columns. Some of the key variables include dumpster number, weight in tons, and volume in cubic yards. For available data, the total weight of the trash collected by Professor Trash Wheel was `r sum(Professor_Trash_Wheel$weight_tons, na.rm=TRUE)` tons. Meanwhile, the number of cigarette butts Gwynnda collected in June 2022 was `r sum(Gwynnda_Trash_Wheel$cigarette_butts[Gwynnda_Trash_Wheel$date >= as.Date("2022-06-01") & Gwynnda_Trash_Wheel$date <= as.Date("2022-06-30")], na.rm=TRUE)`.
 
-##Problem 3
+#Problem 3
 ```{r}
 #import and format bakers data
 bakers = read_csv(file = "/Users/nickywilliams/Desktop/hw2/gbb_datasets/bakers.csv") %>%
@@ -191,4 +180,4 @@ print(season_1)
 print(season_5)
 ```
 
-The average viewership in season 1 was `print(season_1)` and for season 5 it was `print(season_5)`. 
+The average viewership in season 1 was 2.77 and for season 5 it was 10.0. 
